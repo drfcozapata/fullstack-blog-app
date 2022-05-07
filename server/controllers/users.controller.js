@@ -1,84 +1,53 @@
-const { validationResult } = require('express-validator');
-
 // Models
 const { User } = require('../models/user.model');
 
-const getAllUsers = async (req, res) => {
-  try {
-    // SELECT * FROM users;
-    const users = await User.findAll();
+// Utils
+const { catchAsync } = require('../utils/catchAsync');
 
-    res.status(200).json({
-      users,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.findAll();
 
-const createUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  res.status(200).json({
+    users,
+  });
+});
 
-    // INSERT INTO ...
-    const newUser = await User.create({ name, email, password });
+const createUser = catchAsync(async (req, res, next) => {
+  const { name, email, password } = req.body;
 
-    res.status(201).json({ newUser });
-  } catch (error) {
-    console.log(error);
-  }
-};
+  const newUser = await User.create({ name, email, password });
 
-const getUserById = async (req, res) => {
-  try {
-    const { user } = req;
-    // const { id } = req.params;
+  res.status(201).json({ newUser });
+});
 
-    // SELECT * FROM users WHERE id = ?
-    // const user = await User.findOne({ where: { id } });
+const getUserById = catchAsync(async (req, res, next) => {
+  const { user } = req;
 
-    res.status(200).json({
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+  res.status(200).json({
+    user,
+  });
+});
 
-const updateUser = async (req, res) => {
-  try {
-    const { user } = req;
-    // const { id } = req.params;
-    const { name } = req.body;
+const updateUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  const { name, email, password, status } = req.body;
 
-    // await User.update({ name }, { where: { id } });
+  await user.update({ name, email, password, status });
 
-    // const user = await User.findOne({ where: { id } });
+  res.status(200).json({
+    status: 'success',
+  });
+});
 
-    await user.update({ name });
+const deleteUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
 
-    res.status(200).json({ status: 'success' });
-  } catch (error) {
-    console.log(error);
-  }
-};
+  await user.update({ status: 'deleted' });
 
-const deleteUser = async (req, res) => {
-  try {
-    const { user } = req;
-    // const { id } = req.params;
-
-    // DELETE FROM ...
-    // await user.destroy();
-    await user.update({ status: 'deleted' });
-
-    res.status(200).json({
-      status: 'success',
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+  res.status(200).json({
+    status: 'success',
+  });
+});
 
 module.exports = {
   getAllUsers,

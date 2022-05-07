@@ -2,6 +2,10 @@ const express = require('express');
 
 // Middlewares
 const { postExists } = require('../middlewares/posts.middlewares');
+const {
+  createPostValidations,
+  checkValidations,
+} = require('../middlewares/validations.middlewares');
 
 // Controller
 const {
@@ -14,8 +18,10 @@ const {
 
 const router = express.Router();
 
-router.route('/').get(getAllPosts).post(createPost);
-
+router
+  .route('/')
+  .get(getAllPosts)
+  .post(createPostValidations, checkValidations, createPost);
 router
   .use('/:id', postExists)
   .route('/:id')

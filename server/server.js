@@ -9,24 +9,20 @@ const { db } = require('./utils/database');
 
 // Authenticate database credentials
 db.authenticate()
-  .then(() => console.log('Database authenticated'))
-  .catch(err => console.log(err));
+  .then(() => console.log('Database connected and authenticated successfully'))
+  .catch(err => console.log('Error ocurr during database authentication', err));
 
-// Establish models relations
-
-// 1 User <----> M Post
-// User.hasMany(Post, { foreignKey: 'userId' });
+// Models relationship
 User.hasMany(Post);
 Post.belongsTo(User);
 
 // Sync sequelize models
-db.sync()
-  .then(() => console.log('Database synced'))
-  .catch(err => console.log(err));
+// db.sync()
+//   .then(() => console.log('Database synced successfully'))
+//   .catch(err => console.log('Error ocurr during database syncing', err));
 
 // Spin up server
 const PORT = process.env.PORT || 4000;
-
 app.listen(PORT, () => {
-  console.log(`Express app running on port: ${PORT}`);
+  console.log(`Express app running on http://localhost:${PORT}`);
 });

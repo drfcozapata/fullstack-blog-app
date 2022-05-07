@@ -14,6 +14,11 @@ const createUserValidations = [
     .withMessage('Password must be at least 8 characters long'),
 ];
 
+const createPostValidations = [
+  body('title').notEmpty().withMessage('Title cannot be empty'),
+  body('content').notEmpty().withMessage('Content cannot be empty'),
+];
+
 const checkValidations = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -34,5 +39,6 @@ const checkValidations = (req, res, next) => {
 
 module.exports = {
   createUserValidations,
+  createPostValidations,
   checkValidations,
 };

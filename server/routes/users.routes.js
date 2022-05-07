@@ -1,5 +1,4 @@
 const express = require('express');
-const { body } = require('express-validator');
 
 // Middlewares
 const { userExists } = require('../middlewares/users.middlewares');
@@ -19,20 +18,15 @@ const {
 
 const router = express.Router();
 
-router.get('/', getAllUsers);
-
-router.post('/', createUserValidations, checkValidations, createUser);
-
-// router.get('/:id', userExists, getUserById);
-
-// router.patch('/:id', updateUser);
-
-// router.delete('/:id', deleteUser);
-
 router
+  .route('/')
+  .get(getAllUsers)
+  .post(createUserValidations, checkValidations, createUser);
+router
+  .use('/:id', userExists)
   .route('/:id')
-  .get(userExists, getUserById)
-  .patch(userExists, updateUser)
-  .delete(userExists, deleteUser);
+  .get(getUserById)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 module.exports = { usersRouter: router };
