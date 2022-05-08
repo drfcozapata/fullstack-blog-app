@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 // Controllers
 const { globalErrorsHandler } = require('./controllers/errors.controller');
@@ -16,6 +17,14 @@ app.use(cors());
 
 // Enable incoming JSON data
 app.use(express.json());
+
+// Limit IP requests
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 60 * 1000, // 1h
+  max: 10000,
+  message: 'Too many requests from this IP',
+});
+app.use(limiter);
 
 // Endpoints
 app.use('/api/v1/users', usersRouter);

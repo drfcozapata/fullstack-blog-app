@@ -7,7 +7,7 @@ const { catchAsync } = require('../utils/catchAsync');
 
 const getAllPosts = catchAsync(async (req, res, next) => {
   const posts = await Post.findAll({
-    include: [{ model: User }],
+    include: [{ model: User, attributes: { exclude: ['password'] } }],
   });
 
   res.status(200).json({

@@ -8,7 +8,10 @@ const { AppError } = require('../utils/appErrors');
 const userExists = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findOne({
+    where: { id },
+    attributes: { exclude: ['password'] },
+  });
 
   if (!user) {
     return next(new AppError('No user found with the given id', 404));
