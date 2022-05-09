@@ -17,9 +17,9 @@ User.hasMany(Post);
 Post.belongsTo(User);
 
 // Sync sequelize models
-// db.sync()
-//   .then(() => console.log('Database synced successfully'))
-//   .catch(err => console.log('Error ocurr during database syncing', err));
+db.sync()
+  .then(() => console.log('Database synced successfully'))
+  .catch(err => console.log('Error ocurr during database syncing', err));
 
 // Spin up server
 const PORT = process.env.PORT || 4000;

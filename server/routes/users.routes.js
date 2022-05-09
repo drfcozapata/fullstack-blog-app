@@ -1,7 +1,12 @@
 const express = require('express');
 
 // Middlewares
-const { userExists } = require('../middlewares/users.middlewares');
+const {
+  userExists,
+  protectToken,
+  protectAdmin,
+  protectAccountOwner,
+} = require('../middlewares/users.middlewares');
 const {
   createUserValidations,
   checkValidations,
@@ -14,18 +19,23 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  login,
 } = require('../controllers/users.controller');
 
 const router = express.Router();
 
+router.post('/', createUserValidations, checkValidations, createUser);
+router.post('/login', login);
+
+// Apply ProtectToken middleware
+router.use(protectToken);
+
+router.get('/', protectAdmin, getAllUsers);
+router.get('/:id', protectAdmin, userExists, getUserById);
+
 router
-  .route('/')
-  .get(getAllUsers)
-  .post(createUserValidations, checkValidations, createUser);
-router
-  .use('/:id', userExists)
+  .use('/:id', protectAccountOwner, userExists)
   .route('/:id')
-  .get(getUserById)
   .patch(updateUser)
   .delete(deleteUser);
 
