@@ -1,28 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+// Redux actions
+import { checkToken } from '../../store/actions/user.actions';
+
 // Components
 import Login from '../../components/auth/login/login.component';
 import Signup from '../../components/auth/signup/signup.component';
 
 const Auth = () => {
-	const [showLoginForm, setShowLoginForm] = useState(true);
+  // State
+  const isAuth = useSelector(state => state.user.isAuth);
+  const [showLoginForm, setShowLoginForm] = useState(true);
 
-	const showLoginHandler = () => {
-		setShowLoginForm(true);
-	};
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-	const hideLoginHandler = () => {
-		setShowLoginForm(false);
-	};
+  // Handlers
+  const showLoginHandler = () => {
+    setShowLoginForm(true);
+  };
 
-	return (
-		<div>
-			{showLoginForm ? (
-				<Login onHideLogin={hideLoginHandler} />
-			) : (
-				<Signup onShowLogin={showLoginHandler} />
-			)}
-		</div>
-	);
+  const hideLoginHandler = () => {
+    setShowLoginForm(false);
+  };
+
+  useEffect(() => {
+    if (isAuth) navigate('/');
+    else dispatch(checkToken());
+  }, [isAuth, navigate, dispatch]);
+
+  return (
+    <div>
+      {showLoginForm ? (
+        <Login onHideLogin={hideLoginHandler} />
+      ) : (
+        <Signup onShowLogin={showLoginHandler} />
+      )}
+    </div>
+  );
 };
 
 export default Auth;

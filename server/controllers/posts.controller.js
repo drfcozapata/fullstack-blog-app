@@ -16,9 +16,10 @@ const getAllPosts = catchAsync(async (req, res, next) => {
 });
 
 const createPost = catchAsync(async (req, res, next) => {
-  const { title, content, userId } = req.body;
+  const { title, content } = req.body;
+  const { sessionUser } = req;
 
-  const newPost = await Post.create({ title, content, userId });
+  const newPost = await Post.create({ title, content, userId: sessionUser.id });
 
   res.status(201).json({ newPost });
 });

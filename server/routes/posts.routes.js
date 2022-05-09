@@ -2,6 +2,7 @@ const express = require('express');
 
 // Middlewares
 const { postExists } = require('../middlewares/posts.middlewares');
+const { protectToken } = require('../middlewares/users.middlewares');
 const {
   createPostValidations,
   checkValidations,
@@ -17,6 +18,8 @@ const {
 } = require('../controllers/posts.controller');
 
 const router = express.Router();
+
+router.use(protectToken);
 
 router
   .route('/')
