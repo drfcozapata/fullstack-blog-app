@@ -15,6 +15,8 @@ const {
   getPostById,
   updatePost,
   deletePost,
+  getUsersPost,
+  getMyPosts,
 } = require('../controllers/posts.controller');
 
 const router = express.Router();
@@ -25,6 +27,10 @@ router
   .route('/')
   .get(getAllPosts)
   .post(createPostValidations, checkValidations, createPost);
+
+router.get('/me', getMyPosts);
+router.get('/profile/:id', getUsersPost);
+
 router
   .use('/:id', postExists)
   .route('/:id')

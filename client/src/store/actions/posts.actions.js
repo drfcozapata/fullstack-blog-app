@@ -63,3 +63,39 @@ export const deletePost = id => {
     }
   };
 };
+
+export const getMyPosts = () => {
+  return async dispatch => {
+    try {
+      const token = localStorage.getItem('token');
+      // API REQUEST
+      const res = await axios.get(`${API_URL}/me`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const { posts } = res.data;
+
+      dispatch(postsActions.getPosts({ posts }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getPostsUser = userId => {
+  return async dispatch => {
+    try {
+      const token = localStorage.getItem('token');
+      // API REQUEST
+      const res = await axios.get(`${API_URL}/profile/${userId}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const { posts } = res.data;
+
+      dispatch(postsActions.getPosts({ posts }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

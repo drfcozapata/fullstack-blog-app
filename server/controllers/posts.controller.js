@@ -7,6 +7,7 @@ const { catchAsync } = require('../utils/catchAsync');
 
 const getAllPosts = catchAsync(async (req, res, next) => {
   const posts = await Post.findAll({
+    where: { status: 'active' },
     include: [{ model: User, attributes: { exclude: ['password'] } }],
   });
 
@@ -53,10 +54,38 @@ const deletePost = catchAsync(async (req, res, next) => {
   });
 });
 
+const getUsersPost = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const posts = await Post.findAll({
+    where: { userId: id, status: 'active' },
+    include: [{ model: User, attributes: { exclude: ['password'] } }],
+  });
+
+  res.status(200).json({
+    posts,
+  });
+});
+
+const getMyPosts = catchAsync(async (req, res, next) => {
+  const { sessionUser } = req;
+
+  const posts = await Post.findAll({
+    where: { userId: sessionUser.id, status: 'active' },
+    include: [{ model: User, attributes: { exclude: ['password'] } }],
+  });
+
+  res.status(200).json({
+    posts,
+  });
+});
+
 module.exports = {
   getAllPosts,
   createPost,
   getPostById,
   updatePost,
   deletePost,
+  getUsersPost,
+  getMyPosts,
 };

@@ -7,6 +7,7 @@ import Button from '../button/button.component';
 import classes from './header.module.css';
 
 const Header = () => {
+  const user = useSelector(state => state.user.user);
   const isAuth = useSelector(state => state.user.isAuth);
   const dispatch = useDispatch();
 
@@ -23,7 +24,10 @@ const Header = () => {
       {isAuth && (
         <nav className={classes.navigation}>
           {/* TODO: SET USER ID */}
-          <Link className={classes['navigation__link']} to="/profile/1">
+          <Link
+            className={classes['navigation__link']}
+            to={`/profile/${user.id}`}
+          >
             Profile
           </Link>
           <Button
