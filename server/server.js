@@ -1,8 +1,7 @@
 const { app } = require('./app');
 
 // Models
-const { Post } = require('./models/post.model');
-const { User } = require('./models/user.model');
+const { initModels } = require('./models/initModels');
 
 // Utils
 const { db } = require('./utils/database');
@@ -13,8 +12,7 @@ db.authenticate()
   .catch(err => console.log('Error ocurr during database authentication', err));
 
 // Models relationship
-User.hasMany(Post);
-Post.belongsTo(User);
+initModels();
 
 // Sync sequelize models
 db.sync()

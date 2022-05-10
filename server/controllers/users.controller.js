@@ -37,7 +37,9 @@ const createUser = catchAsync(async (req, res, next) => {
   // Remove password from response
   newUser.password = undefined;
 
-  res.status(201).json({ newUser });
+  res.status(201).json({
+    newUser,
+  });
 });
 
 const getUserById = catchAsync(async (req, res, next) => {

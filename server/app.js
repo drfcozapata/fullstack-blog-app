@@ -8,6 +8,7 @@ const { globalErrorsHandler } = require('./controllers/errors.controller');
 // Routers
 const { usersRouter } = require('./routes/users.routes');
 const { postsRouter } = require('./routes/posts.routes');
+const { commentsRouter } = require('./routes/comments.routes');
 
 // Init express app
 const app = express();
@@ -29,6 +30,7 @@ app.use(limiter);
 // Endpoints
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/posts', postsRouter);
+app.use('/api/v1/comments', commentsRouter);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });

@@ -1,5 +1,8 @@
 const { body, validationResult } = require('express-validator');
 
+// Utils
+const { AppError } = require('../utils/appErrors');
+
 const createUserValidations = [
   body('name').notEmpty().withMessage('Name cannot be empty'),
   body('email')
@@ -19,6 +22,10 @@ const createPostValidations = [
   body('content').notEmpty().withMessage('Content cannot be empty'),
 ];
 
+const createCommentValidations = [
+  body('text').notEmpty().withMessage('Comment cannot be empty'),
+];
+
 const checkValidations = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -28,10 +35,7 @@ const checkValidations = (req, res, next) => {
     // [msg, msg, msg] -> 'msg. msg. msg'
     const errorMsg = messages.join('. ');
 
-    return res.status(400).json({
-      status: 'error',
-      message: errorMsg,
-    });
+    return next(new AppError(errorMsg, 400));
   }
 
   next();
@@ -40,5 +44,6 @@ const checkValidations = (req, res, next) => {
 module.exports = {
   createUserValidations,
   createPostValidations,
+  createCommentValidations,
   checkValidations,
 };
