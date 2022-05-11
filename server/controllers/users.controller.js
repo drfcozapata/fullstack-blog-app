@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 
 // Models
 const { User } = require('../models/user.model');
+const { Post } = require('../models/post.model');
+const { Comment } = require('../models/comment.model');
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync');
@@ -14,6 +16,10 @@ dotenv.config((path = './config.env'));
 const getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({
     attributes: { exclude: ['password'] },
+    include: [
+      { model: Post, attributes: ['id', 'title', 'content'] },
+      { model: Comment, attributes: ['id', 'text', 'postId'] },
+    ],
   });
 
   res.status(200).json({
