@@ -19,6 +19,9 @@ app.use(cors());
 // Enable incoming JSON data
 app.use(express.json());
 
+// Enable incoming form-data
+app.use(express.urlencoded({ extended: true }));
+
 // Limit IP requests
 const limiter = rateLimit({
   windowMs: 1 * 60 * 60 * 1000, // 1h
