@@ -24,15 +24,28 @@ const getAllUsers = catchAsync(async (req, res, next) => {
     ],
   });
 
+  // Map Async: use this technique everytime we need some async operations inside an array
+  const usersPromises = users.map(async user => {
+    // Create firebase img ref and get the full path
+    const imgRef = ref(storage, user.profileImgUrl);
+    const url = await getDownloadURL(imgRef);
+
+    // Update user's profileImgUrl property
+    user.profileImgUrl = url;
+    return user;
+  });
+
+  // Wait for all promises to resolve ([Promise {<pending>}]) and return the array
+  const usersResolved = await Promise.all(usersPromises);
+
   res.status(200).json({
-    users,
+    usersResolved,
   });
 });
 
 const createUser = catchAsync(async (req, res, next) => {
   const { name, email, password, role, profileImgUrl } = req.body;
 
-  console.log(req.file);
   const imgRef = ref(storage, `users/${req.file.originalname}`);
   const imgUploaded = await uploadBytes(imgRef, req.file.buffer);
 

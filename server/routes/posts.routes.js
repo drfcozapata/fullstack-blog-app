@@ -19,6 +19,8 @@ const {
   getMyPosts,
 } = require('../controllers/posts.controller');
 
+const { upload } = require('../utils/multer');
+
 const router = express.Router();
 
 router.use(protectToken);
@@ -26,7 +28,12 @@ router.use(protectToken);
 router
   .route('/')
   .get(getAllPosts)
-  .post(createPostValidations, checkValidations, createPost);
+  .post(
+    upload.array('postImgs', 3),
+    createPostValidations,
+    checkValidations,
+    createPost
+  );
 
 router.get('/me', getMyPosts);
 router.get('/profile/:id', getUsersPost);

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 
 // Controllers
 const { globalErrorsHandler } = require('./controllers/errors.controller');
@@ -9,6 +10,7 @@ const { globalErrorsHandler } = require('./controllers/errors.controller');
 const { usersRouter } = require('./routes/users.routes');
 const { postsRouter } = require('./routes/posts.routes');
 const { commentsRouter } = require('./routes/comments.routes');
+const { viewsRouter } = require('./routes/views.routes');
 
 // Init express app
 const app = express();
@@ -21,6 +23,9 @@ app.use(express.json());
 
 // Enable incoming form-data
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 // Limit IP requests
 const limiter = rateLimit({
@@ -34,9 +39,7 @@ app.use(limiter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/posts', postsRouter);
 app.use('/api/v1/comments', commentsRouter);
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use('/', viewsRouter);
 
 // Global Error Handler
 app.use('*', globalErrorsHandler);
